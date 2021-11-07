@@ -20,6 +20,8 @@ namespace fantacalcio
         static public int punteggioTotalePlayer = 0;
         static public int numeroPlayer = 0;
         static public player[] player = new player[1];
+        static public int numerocalciatori = 0;
+        static public calciatore[] calciatore = new calciatore[numerocalciatori];
         static public string file = "0::";
         static public char carattereDivisore=':';
         static public int righeFile=0;
@@ -123,7 +125,7 @@ namespace fantacalcio
             else if (nScelta == 6)
             {
                 Console.WriteLine("chiusura programma");
-                Environment.Exit(0);
+                chiusuraProgramma();
             }
         }
         static public void creazioneID()//funzione che crea l'ID
@@ -141,12 +143,12 @@ namespace fantacalcio
                 }
             }
             Console.WriteLine("sei sicuro di voler creare un nuovo ID con queste credenziali?" + "\n" + "username e password non saranno modificabili dopo la creazione dell'ID" + "\n" + "se vuoi interrompere la creazione digita NO, altrimenti digita SI");
-            while (variabileSceltaUtente!="si"&& variabileSceltaUtente !="SI"&& variabileSceltaUtente !="no" && variabileSceltaUtente != "NO")//ciclo while per controllare se l'utente digita una parola accettabile dal programma
+            while (variabileSceltaUtente !="SI" && variabileSceltaUtente != "NO")//ciclo while per controllare se l'utente digita una parola accettabile dal programma
             {
                 Console.WriteLine("scelta non valida, digita SI oppure NO");//in caso sbagli nell'inserimento gli viene richiesto nuovamente
-                variabileSceltaUtente = Console.ReadLine();
+                variabileSceltaUtente = Convert.ToString(Console.ReadLine()).ToUpper();
             }
-            if (variabileSceltaUtente == "si" || variabileSceltaUtente == "SI" || variabileSceltaUtente == "Si")//se la scelta è si
+            if (variabileSceltaUtente == "SI")//se la scelta è si
             {
                 numeroPlayer++;//viene aumentato il numero di giocatori
                 player[numeroPlayer - 1] = new player();//viene istanziato un nuovo oggetto della classe player e ne vengono richiamati due metodi
@@ -196,10 +198,9 @@ namespace fantacalcio
                 }
                 File.WriteAllText(@"C:\Users\Studente\Desktop\IDePunteggi", salvataggioID);//esegue la scrittura su file
             }
-            else if(variabileSceltaUtente == "no" || variabileSceltaUtente == "NO" || variabileSceltaUtente == "No")
+            else if(variabileSceltaUtente == "NO")
             {
                 Console.WriteLine("annullamento eseguito");
-                //aggiungere un ritardo di 5s
                 Console.Clear();
             }
         }
@@ -227,17 +228,80 @@ namespace fantacalcio
             accessoEseguito = false;//variabile che indica se il log in è stato eseguito impostata a false
             numeroOggettoPlayer = numeroPlayer;//il numero relativo all'oggetto player viene impostato su un valore impossibile
         }
+        static public void iniziaAsta()
+        {
+            string variabileDiConfrontoPassword="";
+            string annullaLogIn = "";
+            //la funzione asta funziona solo se tutti i giocatori sono presenti allo stesso tempo, quindi richiederà il log-in di tutti
+            for (int i = 0; i < numeroPlayer; i++)
+            {
+                if (i==numeroOggettoPlayer)//in caso i sia pari al numero dell'oggetto player dell'utente già loggato in precedenza
+                {
+                    break;//il programma non esegue nulla
+                }
+                else//se i è pari al numero dell'oggetto player degli altri utenti
+                {
+                    while (variabileDiConfrontoPassword!=player[i].password||annullaLogIn!="SI")
+                    {
+                        Console.WriteLine("{0} inserisci la tua password", player[i].nome);
+                        variabileDiConfrontoPassword = Console.ReadLine();
+                        if(variabileDiConfrontoPassword != player[i].password)
+                        {
+                            Console.WriteLine("se vuoi uscire dalla modalità inizia asta digita SI, per reinserire la password di {0} digita NO", player[i].nome);
+                            annullaLogIn=Convert.ToString(Console.ReadLine()).ToUpper();
+                        }
+                    }
+                    if (annullaLogIn=="SI")
+                    {
+                        sceltaUtenteLogIn();
+                    }
+                }
+            }
+            bool giocatoriMinimi = false;
+            string nomeCalciatore="";
+            string cognomeCalciatore = "";
+            int numeroPlayerOfferta = 0;
+            int offerta = 0;
+            bool fineAstaGiocatore = false;
+            while(giocatoriMinimi==false)
+            {
+                Console.WriteLine("inserire il nome del giocatore");
+                nomeCalciatore = Console.ReadLine();                
+                Console.WriteLine("inserire il cognome del giocatore");
+                cognomeCalciatore = Console.ReadLine();
+                calciatore[numerocalciatori] = new calciatore();
+                calciatore[numerocalciatori].getNome();
+                calciatore[numerocalciatori].getCognome();
+                for (int i = 0; i < numerocalciatori; i++)
+                {
+
+                }
+            }
+
+        }
+        static public bool controlloNumeroGiocatori(bool giocatoriMinimi)
+        {
+            giocatoriMinimi = true;
+            for (int i = 0; i < numeroPlayer; i++)
+            {
+                if (player[i].arrayRosaCalciatori.Length<7)
+                {
+                    giocatoriMinimi = false;
+                }
+            }
+            return giocatoriMinimi;
+        }
         static public void nome_Password()//funzione per l'inserimento di nome e password del player
         {
             string scelta = "NO";//la stringa viene impostata a NO per poter far partire il ciclo successivo
-            while(scelta != "si" || scelta != "SI" || scelta != "Si")//se la scelta dell'utente non è SI esegue il ciclo
+            while(scelta != "SI")//se la scelta dell'utente non è SI esegue il ciclo
             {
                 Console.WriteLine("qual'e' il tuo username?");
                 nomePlayer = Console.ReadLine();//inserimento del nome
                 Console.WriteLine("qual'e' sarà la tua password?");
                 passwordPlayer = Console.ReadLine();//inserimento della password
                 Console.WriteLine("se le credenziali vanno bene digita SI, altrimenti digita NO per reinserirle");
-                scelta = Console.ReadLine();//variabile per l'eventuale reinserimento di nome e cognome 
+                scelta = Convert.ToString(Console.ReadLine()).ToUpper();//variabile per l'eventuale reinserimento di nome e cognome                                          
             }
         }
         private static void acquisizioneFileOggetti()//funzione che gestisce l'eventuale creazione e caricamento di dati presenti su file nel programma
@@ -255,7 +319,7 @@ namespace fantacalcio
             catch (IOException)//Se si verifica questo errore, cioè errore di lettura, esegue le operazioni seguenti.
             {
                 Console.WriteLine("ERRORE: si è verificato un errore durante la lettura dei file. Prova ad aprilo di nuovo.");
-                Environment.Exit(0);
+                chiusuraProgramma();
             }
             string[] elementiFileDaOrdinare = file.Split(carattereDivisore);//gli elementi presenti su file vengono inseriti nell'array 
             righeFile = Convert.ToInt32(elementiFileDaOrdinare[0]);//la variabile righefile assume il valore del primo elemento dell'array elementiFileDaOrdinare(infatti questa cella contiene il numero delle righe)
@@ -290,6 +354,10 @@ namespace fantacalcio
                     n1++;//viene aumentato il puntatore alla cella dell'array
                 }
             }
+        }
+        static public void chiusuraProgramma()//funzione che effettua la chiusura del programma 
+        {
+            Environment.Exit(0);
         }
     }
     class calciatore
@@ -328,6 +396,7 @@ namespace fantacalcio
     {
         public string nome = "";
         public string password = "";
+        public string[] arrayRosaCalciatori = new string[0];
         public player()
         {
 
