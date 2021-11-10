@@ -12,14 +12,13 @@ namespace fantacalcio
         static public int numeroOggettoPlayer;
         static public string nomeCalciatore = "";
         static public string cognomeCalciatore = "";
-        static public int prezzoCalciatore = 0;
         static public string playerPossessoreCalciatore = "";
         static public string nomePlayer = "";
         static public string passwordPlayer = "";
         static public int creditiPlayer = 0;
         static public int punteggioTotalePlayer = 0;
         static public int numeroPlayer = 0;
-        static public player[] player = new player[1];
+        static public player[] player = new player[numeroPlayer];
         static public int numerocalciatori = 0;
         static public calciatore[] calciatore = new calciatore[numerocalciatori];
         static public string file = "0::";
@@ -216,7 +215,6 @@ namespace fantacalcio
                     numeroOggettoPlayer = i;//viene salvato il numero relativo all'oggetto player
                     break;
                 }
-                break;
             }
         }
         static public void visualizzaClassifica()
@@ -257,34 +255,96 @@ namespace fantacalcio
                     }
                 }
             }
-            bool giocatoriMinimi = false;
-            string nomeCalciatore="";
-            string cognomeCalciatore = "";
-            int numeroPlayerOfferta = 0;
-            int offerta = 0;
-            bool fineAstaGiocatore = false;
-            while(giocatoriMinimi==false)
+            bool giocatoriMinimi = false;//variabile utilizzata per porre fine all'asta
+            string nomeCalciatore="";//variabile utilizzata per assegnare un nome al nuovo calciatore
+            string cognomeCalciatore = "";//variabile utilizzata per assegnare un cognome al nuovo calciatore
+            int numeroPlayerOfferta = numeroPlayer++;//all'inizio dell'asta la variabile che indica a che oggetto player appartiene l'offerta per il giocatore è impostata su un valore impossibile
+            int offerta = 0;//variabile utilizzata per indicare l'offerta maggiore
+            int offertaPlayer = 0;//variabile utilizzata per l'inserimento delle offerte da parte degli utenti e per effettuare dei controlli di validità
+            while(giocatoriMinimi==false)//l'asta dura fino a quando i giocatori per ogni player non sono 11
             {
-                Console.WriteLine("inserire il nome del giocatore");
+                controlloNumeroGiocatoriECreditiPlayer();//viene richiamata la funzione controlloNumeroGiocatoriECreditiPlayer
+                controlloNumeroGiocatori(giocatoriMinimi);//viene richiamata la funzione controlloNumeroGiocatori
+                Console.WriteLine("inserire il nome del giocatore");//inserimento nome del nuovo calciatore
                 nomeCalciatore = Console.ReadLine();                
-                Console.WriteLine("inserire il cognome del giocatore");
+                Console.WriteLine("inserire il cognome del giocatore");//inserimento cognome del nuovo calciatore
                 cognomeCalciatore = Console.ReadLine();
-                calciatore[numerocalciatori] = new calciatore();
-                calciatore[numerocalciatori].getNome();
-                calciatore[numerocalciatori].getCognome();
-                for (int i = 0; i < numerocalciatori; i++)
+                calciatore[numerocalciatori] = new calciatore();//viene creato il nuovo calciatore e gli vengono assegnati nome e cognome
+                calciatore[numerocalciatori].getNome(nomeCalciatore);
+                calciatore[numerocalciatori].getCognome(cognomeCalciatore);
+                for (int i = 0; i < numeroPlayer; i++)//ciclo for che permette la rotazione dell'inserimento delle offerte per il calciatore tra i diversi player
                 {
+                    if (offerta==offerta)
+                    {
 
+                    }
+                    if (numeroPlayerOfferta!=i)//se il player che dovrebbe inserire un'offerta è lo stesso ad aver già effettuato l'offerta maggiore il programma non esegue nessun comando
+                    {
+                        if (player[i].arrayRosaCalciatori.Length < 11)//il programma controlla se il player ha ancora spazio in rosa
+                        {
+                            bool success = false;
+                            while (success == false)//il programma permette al player l'inserimento di un'offerta
+                            {
+                                Console.WriteLine("player {0} inserisci la tua offerta oppure oppure digita 0", player[i].nome);
+                                string valoreInserito = Console.ReadLine();
+                                offertaPlayer = 0;
+                                success = int.TryParse(valoreInserito, out offertaPlayer);//il programma controlla se il valore inserito da tastiera è un intero
+                                if (offertaPlayer > player[i].crediti)//se l'offerta è maggiore dei crediti del player il programma porta offertaPlayer a 0
+                                {
+                                    offertaPlayer = offerta;
+                                }
+                            }
+                            if (offertaPlayer <= offerta)//se il player inserisce un'offerta minore di quella da battere il programma lo segnala
+                            {
+                                Console.WriteLine("offerta di {0} non valida", player[i].nome);
+                            }
+                            else if (offertaPlayer > offerta)//se la nuova offerta è maggiore di quella da battere
+                            {
+                                numeroPlayerOfferta = i;//viene salvato il numero delloggetto player a cui appartiene l'offerta
+                                offerta = offertaPlayer;//viene aggiornata l'offerta da battere
+                            }
+                        }
+                        if (i == numeroPlayer - 1 && offerta != offertaPlayer)//se
+                        {
+                            i = 0;
+                        }
+                    } 
+                }
+                calciatore[numerocalciatori].getPlayerPossessore(player[numeroPlayerOfferta].nome);
+                calciatore[numerocalciatori].getPrezzo(offerta);
+                player[numeroPlayerOfferta].getRosa(numerocalciatori);
+                player[numeroPlayerOfferta].getCrediti(offerta);
+                numerocalciatori++;
+            }
+        }
+        public static void controlloNumeroGiocatoriECreditiPlayer()
+        {
+            string nomeBot = "bot";
+            string cognomeBot = "bot";
+            int prezzoBot = 0;
+            for (int i = 0; i < numeroPlayer; i++)
+            {
+                if (player[i].arrayRosaCalciatori.Length < 11 && player[i].crediti == 0)
+                {
+                    for (int j = 0; j < (11-player[i].arrayRosaCalciatori.Length); j++)
+                    {
+                        calciatore[numerocalciatori] = new calciatore();
+                        calciatore[numerocalciatori].getNome(nomeBot);
+                        calciatore[numerocalciatori].getCognome(cognomeBot);
+                        calciatore[numerocalciatori].getPrezzo(prezzoBot);
+                        calciatore[numerocalciatori].getPlayerPossessore(player[i].nome);
+                        player[i].getRosa(numerocalciatori);
+                        numerocalciatori++;
+                    }
                 }
             }
-
         }
         static public bool controlloNumeroGiocatori(bool giocatoriMinimi)
         {
             giocatoriMinimi = true;
             for (int i = 0; i < numeroPlayer; i++)
             {
-                if (player[i].arrayRosaCalciatori.Length<7)
+                if (player[i].arrayRosaCalciatori.Length<11)
                 {
                     giocatoriMinimi = false;
                 }
@@ -344,7 +404,7 @@ namespace fantacalcio
                     else if (j == 2)//j=2 se si tratta del terzo elemento della riga dell'array ossia i crediti del player
                     {
                         creditiPlayer = Convert.ToInt32(elementiFileDaOrdinare[n1]);//viene asseganto all'intero creditiPlayer il valore della cella dell'array
-                        player[i].getCrediti();//viene richiamato il metodo per l'inserimento dei crediti dell'oggetto
+                        player[i].getCrediti(creditiPlayer);//viene richiamato il metodo per l'inserimento dei crediti dell'oggetto
                     }
                     else if (j == 3)//j=3 se si tratta del quarto elemento della riga dell'array ossia il punteggioTotale del player
                     {
@@ -375,31 +435,45 @@ namespace fantacalcio
             playerPossessore = "";
             punteggioPartita = 0;
         }
-        public void getNome()
+        public void getNome(string nomeCalciatore)
         {
-
+            nome = nomeCalciatore;
         }
-        public void getCognome()
+        public void getCognome(string cognomeCalciatore)
         {
-            
+            cognome = cognomeCalciatore;          
         }
-        public void getPrezzo()
+        public void getPrezzo(int offerta)
         {
-
+            prezzo = offerta;
         }
-        public void getPlayerPossessore()
+        public void getPlayerPossessore(string nomePlayerPossessore)
         {
-
+            playerPossessore = nomePlayerPossessore;
+        }
+        public void getPunteggioPartita()
+        {
+            if (nome == "bot")
+            {
+                punteggioPartita = 0;
+            }
+            else
+            {
+                //riceverà in ingresso i dati immessi dall'utente
+            }
         }
     }
     class player
     {
         public string nome = "";
         public string password = "";
-        public string[] arrayRosaCalciatori = new string[0];
+        public int crediti;
+        public int[] arrayRosaCalciatori = new int[0];
         public player()
         {
-
+            string nome = "";
+            string password = "";
+            int crediti=1000;
         }
         public void getNome()
         {
@@ -409,13 +483,14 @@ namespace fantacalcio
         {
             password = Program.passwordPlayer;
         }
-        public void getCrediti()
+        public void getCrediti(int offerta)
         {
-
+            crediti = crediti - offerta;
         }
-        public void getRosa()
+        public void getRosa(int posizioneGiocatore)
         {
-
+            Array.Resize(ref arrayRosaCalciatori, arrayRosaCalciatori.Length + 1);
+            arrayRosaCalciatori[arrayRosaCalciatori.Length - 1] = posizioneGiocatore;
         }
         public void getPunteggioGiornata()
         {
