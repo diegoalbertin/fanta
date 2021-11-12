@@ -4,3 +4,9 @@ C:\Users\Studente\Documents\GitHub\fanta\fantacalcio\fantacalcio\obj\Debug\fanta
 C:\Users\Studente\Documents\GitHub\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.csproj.CoreCompileInputs.cache
 C:\Users\Studente\Documents\GitHub\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.exe
 C:\Users\Studente\Documents\GitHub\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.pdb
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\bin\Debug\fantacalcio.exe
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\bin\Debug\fantacalcio.pdb
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.csprojAssemblyReference.cache
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.csproj.CoreCompileInputs.cache
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.exe
+C:\Users\Asus\Desktop\fanta\fantacalcio\fantacalcio\obj\Debug\fantacalcio.pdb
