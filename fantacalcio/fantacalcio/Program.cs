@@ -95,7 +95,7 @@ namespace fantacalcio
                 Console.WriteLine("non hai inserito un numero");
                 sceltaUtenteNoLogIn();
             }
-            else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4)//in caso non sia stato inserito un numero compreso tra 1-3
+            else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4 && nScelta != 5)//in caso non sia stato inserito un numero compreso tra 1-3
             {
                 Console.WriteLine("non hai inserito un numero tra quelli elencati");
                 sceltaUtenteNoLogIn();
@@ -123,10 +123,11 @@ namespace fantacalcio
             else if (nScelta == 5)
             {
                 Console.Clear();
-                //inserisciRosaProssimaGiornata();
+                inserimentoPunteggiCalciatori();
             }
-            else if (nScelta == 6)
+            else if(nScelta == 6)
             {
+                Console.Clear();
                 Console.WriteLine("chiusura programma");
                 chiusuraProgramma();
             }
@@ -236,7 +237,6 @@ namespace fantacalcio
         }
         static public void iniziaAsta()
         {
-
             if (astaEseguita==false)
             {
                 if (player.Length < 2)
@@ -253,11 +253,10 @@ namespace fantacalcio
                         string annullaLogIn = "";
                         //la funzione asta funziona solo se tutti i giocatori sono presenti allo stesso tempo, quindi richiederà il log-in di tutti
                         for (int i = 0; i < numeroPlayer; i++)
-                        {
-                            
+                        {                          
                             if (i == numeroOggettoPlayer)//in caso i sia pari al numero dell'oggetto player dell'utente già loggato in precedenza
                             {
-                                break;//il programma non esegue nulla
+                                //break;//il programma non esegue nulla
                             }
                             else//se i è pari al numero dell'oggetto player degli altri utenti
                             {
@@ -279,6 +278,7 @@ namespace fantacalcio
                             }
                         }
                         cominciaAsta = true;
+                        Console.Clear();
                     }
                     if (cominciaAsta==true)
                     {
@@ -293,19 +293,19 @@ namespace fantacalcio
                             inserimentoNomeCalciatore();
                             inserimentoCognomeCalciatore();
                             Array.Resize(ref calciatore, calciatore.Length + 1);
-                            calciatore[calciatore.Length-1] = new calciatore();//viene creato il nuovo calciatore e gli vengono assegnati nome e cognome
+                            calciatore[calciatore.Length - 1] = new calciatore();//viene creato il nuovo calciatore e gli vengono assegnati nome e cognome
                             calciatore[calciatore.Length - 1].getNome();
                             calciatore[calciatore.Length - 1].getCognome();
                             offerta = 0;
                             offertaPlayer = 0;
-                            numeroPlayerOfferta = numeroPlayer++;
+                            numeroPlayerOfferta = numeroPlayer+1;
                             for (int i = 0; i < numeroPlayer; i++)//ciclo for che permette la rotazione dell'inserimento delle offerte per il calciatore tra i diversi player
                             {
-                                if (player[i].offerta == offerta)
+                                if (i == numeroPlayerOfferta)
                                 {
                                     break;
                                 }
-                                if (numeroPlayerOfferta != i)//se il player che dovrebbe inserire un'offerta è lo stesso ad aver già effettuato l'offerta maggiore il programma non esegue nessun comando
+                                else if (numeroPlayerOfferta != i)//se il player che dovrebbe inserire un'offerta è lo stesso ad aver già effettuato l'offerta maggiore il programma non esegue nessun comando
                                 {
                                     if (player[i].arrayRosaCalciatori.Length < 11)//il programma controlla se il player ha ancora spazio in rosa
                                     {
@@ -324,7 +324,7 @@ namespace fantacalcio
                                         }
                                         if (offertaPlayer <= offerta)//se il player inserisce un'offerta minore di quella da battere il programma lo segnala
                                         {
-                                            Console.WriteLine("offerta di {0} non valida", player[i].nome);
+                                            Console.WriteLine("offerta di {0} non valida o pari a 0", player[i].nome);
                                         }
                                         else if (offertaPlayer > offerta)//se la nuova offerta è maggiore di quella da battere
                                         {
@@ -458,6 +458,22 @@ namespace fantacalcio
                 scelta = Convert.ToString(Console.ReadLine()).ToUpper();//variabile per l'eventuale reinserimento di nome e cognome                                          
             }
         }
+        static public void inserimentoPunteggiCalciatori()
+        {
+            string punteggiDaConvertire="";
+            for (int i = 0; i < calciatore.Length; i++)
+            {
+                bool success = false;
+                double punteggio = 0;
+                while (success==false)
+                {
+                    Console.WriteLine("inserisci il punetggio di {0}", calciatore[i].nome);
+                    punteggio = 0;
+                    success = double.TryParse(punteggiDaConvertire, out punteggio);
+                }
+                calciatore[i].getPunteggioPartita(punteggio);
+            }
+        }
         private static void acquisizioneFileOggetti()//funzione che gestisce l'eventuale creazione e caricamento di dati presenti su file nel programma
         {
             try
@@ -527,7 +543,7 @@ namespace fantacalcio
                 Console.WriteLine("ERRORE: si è verificato un errore durante la lettura dei file. Prova ad aprilo di nuovo.");
                 chiusuraProgramma();
             }
-            string[] elementiDaOrdinare = file.Split(carattereDivisore);//gli elementi presenti su file vengono inseriti nell'array 
+            string[] elementiDaOrdinare = fileCalciatori.Split(carattereDivisore);//gli elementi presenti su file vengono inseriti nell'array 
             righeFileCalciatori = Convert.ToInt32(elementiDaOrdinare[0]);//la variabile righefile assume il valore del primo elemento dell'array elementiFileDaOrdinare(infatti questa cella contiene il numero delle righe)
             int n1 = 1; //Si inizializza la variabile necessaria per l'estrazione del contenuto dell'array monodimensionale elementi.
             numerocalciatori = righeFileCalciatori;
@@ -610,7 +626,7 @@ namespace fantacalcio
         {
             playerPossessore = nomePlayerPossessore;
         }
-        public void getPunteggioPartita()
+        public void getPunteggioPartita(double punteggio)
         {
             if (nome == "bot")
             {
@@ -618,7 +634,7 @@ namespace fantacalcio
             }
             else
             {
-                //riceverà in ingresso i dati immessi dall'utente
+                punteggioPartita = punteggio;
             }
         }
     }
