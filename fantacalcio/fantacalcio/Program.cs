@@ -28,6 +28,7 @@ namespace fantacalcio
         static public char carattereDivisore=':';
         static public int righeFile=0;
         static public int righeFileCalciatori = 0;
+        static public int[,] arrayOrdinamento;
         static void Main(string[] args)
         {
             int cicloInfinito = 0;
@@ -98,7 +99,7 @@ namespace fantacalcio
             else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4 && nScelta != 5 && nScelta!=6)//in caso non sia stato inserito un numero compreso tra 1-3
             {
                 Console.WriteLine("non hai inserito un numero tra quelli elencati");
-                sceltaUtenteNoLogIn();
+                 sceltaUtenteLogIn();
             }
             else if (nScelta == 1)//scelta n°1
             {
@@ -285,9 +286,9 @@ namespace fantacalcio
                     }
                     if (cominciaAsta==true)
                     {
+                        arrayOrdinamento = new int[numeroPlayer, 2];
                         bool giocatoriMinimi = false;//variabile utilizzata per porre fine all'asta
                         int numeroPlayerOfferta;//all'inizio dell'asta la variabile che indica a che oggetto player appartiene l'offerta per il giocatore è impostata su un valore impossibile
-                        int offerta;//variabile utilizzata per indicare l'offerta maggiore
                         int offertaPlayer;//variabile utilizzata per l'inserimento delle offerte da parte degli utenti e per effettuare dei controlli di validità
                         while (giocatoriMinimi == false)//l'asta dura fino a quando i giocatori per ogni player non sono 11
                         {
@@ -299,58 +300,51 @@ namespace fantacalcio
                             calciatore[calciatore.Length - 1] = new calciatore();//viene creato il nuovo calciatore e gli vengono assegnati nome e cognome
                             calciatore[calciatore.Length - 1].getNome();
                             calciatore[calciatore.Length - 1].getCognome();
-                            offerta = 0;
+                            //offerta = 0;
                             offertaPlayer = 0;
                             numeroPlayerOfferta = numeroPlayer+1;
                             for (int i = 0; i < numeroPlayer; i++)//ciclo for che permette la rotazione dell'inserimento delle offerte per il calciatore tra i diversi player
                             {
-                                Console.WriteLine("crediti di {0}: {1}", player[i].nome, player[i].crediti);
-                                if (i == numeroPlayerOfferta)
+                                if (player[i].crediti != 0)
                                 {
-                                    break;
+                                    Console.WriteLine("crediti di {0}: {1}", player[i].nome, player[i].crediti);
+                                    bool success = false;
+                                    while (success == false)//il programma permette al player l'inserimento di un'offerta
+                                    {
+                                        Console.WriteLine("player {0} inserisci la tua offerta oppure digita 0", player[i].nome);
+                                        string valoreInserito = Console.ReadLine();
+                                        offertaPlayer = 0;
+                                        success = int.TryParse(valoreInserito, out offertaPlayer);//il programma controlla se il valore inserito da tastiera è un intero
+                                    }
+                                    if (offertaPlayer > player[i].crediti)//se l'offerta è maggiore dei crediti del player il programma porta offertaPlayer a 0
+                                    {
+                                        offertaPlayer = 0;
+                                        player[i].getOfferta(offertaPlayer);
+                                    }
+                                    arrayOrdinamento[i, 0] = i;
+                                    arrayOrdinamento[i, 1] = offertaPlayer;
                                 }
-                                else if (numeroPlayerOfferta != i)//se il player che dovrebbe inserire un'offerta è lo stesso ad aver già effettuato l'offerta maggiore il programma non esegue nessun comando
+                                else
                                 {
-                                    if (player[i].arrayRosaCalciatori.Length < 11)//il programma controlla se il player ha ancora spazio in rosa
-                                    {
-                                        bool success = false;
-                                        while (success == false)//il programma permette al player l'inserimento di un'offerta
-                                        {
-                                            Console.WriteLine("player {0} inserisci la tua offerta oppure digita 0", player[i].nome);
-                                            string valoreInserito = Console.ReadLine();
-                                            offertaPlayer = 0;
-                                            success = int.TryParse(valoreInserito, out offertaPlayer);//il programma controlla se il valore inserito da tastiera è un intero
-                                            if (offertaPlayer > player[i].crediti)//se l'offerta è maggiore dei crediti del player il programma porta offertaPlayer a 0
-                                            {
-                                                offertaPlayer = 0;
-                                                player[i].getOfferta(offertaPlayer);
-                                            }
-                                        }
-                                        if (offertaPlayer <= offerta)//se il player inserisce un'offerta minore di quella da battere il programma lo segnala
-                                        {
-                                            Console.WriteLine("offerta di {0} non valida o pari a 0", player[i].nome);
-                                        }
-                                        else if (offertaPlayer > offerta)//se la nuova offerta è maggiore di quella da battere
-                                        {
-                                            numeroPlayerOfferta = i;//viene salvato il numero delloggetto player a cui appartiene l'offerta
-                                            offerta = offertaPlayer;//viene aggiornata l'offerta da battere
-                                            player[i].getOfferta(offertaPlayer);
-                                        }
-                                    }
-                                    if (i == numeroPlayer - 1)//viene fatto iniziare da capo il ciclo for
-                                    {
-                                        i = -1;
-                                    }
+                                    offertaPlayer = 0;
+                                    arrayOrdinamento[i, 0] = i;
+                                    arrayOrdinamento[i, 1] = offertaPlayer;
                                 }
+                            }
+                            sort();
+                            if (arrayOrdinamento[(arrayOrdinamento.Length / 2) - 1, 1]!=0)
+                            {
+                                calciatore[calciatore.Length - 1].getPlayerPossessore(player[arrayOrdinamento[(arrayOrdinamento.Length/2)-1, 0]].nome);
+                                calciatore[calciatore.Length - 1].getPrezzo(arrayOrdinamento[(arrayOrdinamento.Length / 2) - 1, 1]);
+                                player[arrayOrdinamento[(arrayOrdinamento.Length / 2) - 1, 0]].getRosa(numerocalciatori);
+                                offertaPlayer = arrayOrdinamento[(arrayOrdinamento.Length / 2) - 1, 1];
+                                player[arrayOrdinamento[(arrayOrdinamento.Length / 2)-1, 0]].getCrediti(offertaPlayer);
+                                Console.WriteLine("{0} si aggiudica {1}", player[arrayOrdinamento[(arrayOrdinamento.Length / 2) - 1, 0]].nome, nomeCalciatore);
+                                numerocalciatori++;
                             }//vengono salvati i dati del giocatore e del player possessore
-                            calciatore[calciatore.Length - 1].getPlayerPossessore(player[numeroPlayerOfferta].nome);
-                            calciatore[calciatore.Length - 1].getPrezzo(offerta);
-                            player[numeroPlayerOfferta].getRosa(numerocalciatori);
-                            player[numeroPlayerOfferta].getCrediti(offerta);
-                            Console.WriteLine("{0} si aggiudica {1}", player[numeroPlayerOfferta].nome, nomeCalciatore);
-                            numerocalciatori++;
                             nomeCalciatore = "";
                             cognomeCalciatore = "";
+                            Console.ReadLine();
                             Console.Clear();
                         }
                         astaEseguita = true;//viene segnalato che l'asta è stata eseguita
@@ -399,6 +393,39 @@ namespace fantacalcio
                 sceltaUtenteLogIn();
             }              
         }
+        static private void sort()
+        {
+            int primoElementoComparazione;
+            int secondoElementoComparazione;
+            for (int i = 0; i < numeroPlayer; i++)
+            {
+                // Trova il minimo nel subarray da ordinare
+                int indice_min = i;
+                primoElementoComparazione = 0;
+                secondoElementoComparazione = 0;
+                for (int j = i + 1; j < numeroPlayer; j++)
+                {
+                    primoElementoComparazione = arrayOrdinamento[j, 1];
+                    secondoElementoComparazione = arrayOrdinamento[indice_min, 1];
+                    // Confronto per trovare un nuovo minimo
+                    if (primoElementoComparazione < secondoElementoComparazione)
+                    {
+                        indice_min = j; // Salvo l'indice del nuovo minimo
+                    }
+                }
+                // Scambia il minimo trovato con il primo elemento
+                swap(indice_min, i);
+            }
+        }
+        static private void swap( int a, int b)
+        {
+            int temp1 = arrayOrdinamento[a, 1];
+            arrayOrdinamento[a, 1] = arrayOrdinamento[b, 1];
+            arrayOrdinamento[b, 1] = temp1;
+            int temp2 = arrayOrdinamento[a, 0];
+            arrayOrdinamento[a, 0] = arrayOrdinamento[b, 0];
+            arrayOrdinamento[b, 0] = temp2;
+        }
         public static void controlloNumeroGiocatoriECreditiPlayer()
         {
             int prezzoBot = 0;
@@ -421,6 +448,8 @@ namespace fantacalcio
                     }
                 }
             }
+            nomeCalciatore = "";
+            cognomeCalciatore = "";
         }
         static public string inserimentoNomeCalciatore()
         {
@@ -515,6 +544,7 @@ namespace fantacalcio
             for (int i = 0; i < player.Length; i++)//vengono ripuliti gli array contenenti i puntatori agli oggetti calciatori di tutti i player
             {
                 Array.Clear(player[i].arrayRosaCalciatori, 0, 11);
+                player[i].resetCrediti();
             }
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", fileCalciatori);//viene svuotato il file contenente i calciatori
             astaEseguita = false;//vengono impostate a false le variabili legate all'asta
@@ -709,6 +739,10 @@ namespace fantacalcio
         public void getPassword()
         {
             password = Program.passwordPlayer;
+        }
+        public void resetCrediti()
+        {
+            crediti = 1000;
         }
         public void getCrediti(int offerta)
         {
