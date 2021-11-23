@@ -300,7 +300,6 @@ namespace fantacalcio
                             calciatore[calciatore.Length - 1] = new calciatore();//viene creato il nuovo calciatore e gli vengono assegnati nome e cognome
                             calciatore[calciatore.Length - 1].getNome();
                             calciatore[calciatore.Length - 1].getCognome();
-                            //offerta = 0;
                             offertaPlayer = 0;
                             numeroPlayerOfferta = numeroPlayer+1;
                             for (int i = 0; i < numeroPlayer; i++)//ciclo for che permette la rotazione dell'inserimento delle offerte per il calciatore tra i diversi player
