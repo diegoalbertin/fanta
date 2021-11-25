@@ -29,6 +29,7 @@ namespace fantacalcio
         static public int righeFile=0;
         static public int righeFileCalciatori = 0;
         static public int[,] arrayOrdinamento;
+        static public bool giocatoriMinimi = false;
         static void Main(string[] args)
         {
             int cicloInfinito = 0;
@@ -94,7 +95,7 @@ namespace fantacalcio
             if (success == false)//in caso non sia stato inserito un numero
             {
                 Console.WriteLine("non hai inserito un numero");
-                sceltaUtenteNoLogIn();
+                sceltaUtenteLogIn();
             }
             else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4 && nScelta != 5 && nScelta!=6)//in caso non sia stato inserito un numero compreso tra 1-3
             {
@@ -287,13 +288,13 @@ namespace fantacalcio
                     if (cominciaAsta==true)
                     {
                         arrayOrdinamento = new int[numeroPlayer, 2];
-                        bool giocatoriMinimi = false;//variabile utilizzata per porre fine all'asta
+                        //variabile utilizzata per porre fine all'asta
                         int numeroPlayerOfferta;//all'inizio dell'asta la variabile che indica a che oggetto player appartiene l'offerta per il giocatore è impostata su un valore impossibile
                         int offertaPlayer;//variabile utilizzata per l'inserimento delle offerte da parte degli utenti e per effettuare dei controlli di validità
                         while (giocatoriMinimi == false)//l'asta dura fino a quando i giocatori per ogni player non sono 11
                         {
                             controlloNumeroGiocatoriECreditiPlayer();//viene richiamata la funzione controlloNumeroGiocatoriECreditiPlayer
-                            controlloNumeroGiocatori(giocatoriMinimi);//viene richiamata la funzione controlloNumeroGiocatori
+                            controlloNumeroGiocatori();//viene richiamata la funzione controlloNumeroGiocatori
                             inserimentoNomeCalciatore();
                             inserimentoCognomeCalciatore();
                             Array.Resize(ref calciatore, calciatore.Length + 1);
@@ -434,7 +435,8 @@ namespace fantacalcio
                 {
                     nomeCalciatore = "bot";
                     cognomeCalciatore = "bot";
-                    for (int j = 0; j < (11-player[i].arrayRosaCalciatori.Length); j++)
+                    int lenght = player[i].arrayRosaCalciatori.Length;
+                    for (int j = 0; j < (11-lenght); j++)
                     {
                         Array.Resize(ref calciatore, calciatore.Length + 1);
                         calciatore[numerocalciatori] = new calciatore();
@@ -468,7 +470,7 @@ namespace fantacalcio
             }
             return cognomeCalciatore;
         }
-        static public bool controlloNumeroGiocatori(bool giocatoriMinimi)//funzione per determinare se il numero di giocatori per player è completo(pari a 11)
+        static public bool controlloNumeroGiocatori()//funzione per determinare se il numero di giocatori per player è completo(pari a 11)
         {
             giocatoriMinimi = true;
             for (int i = 0; i < numeroPlayer; i++)
@@ -545,9 +547,12 @@ namespace fantacalcio
                 Array.Clear(player[i].arrayRosaCalciatori, 0, 11);
                 player[i].resetCrediti();
             }
+            Array.Clear(calciatore, 0, numerocalciatori - 1);//vengono eliminati i calciatori
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", fileCalciatori);//viene svuotato il file contenente i calciatori
             astaEseguita = false;//vengono impostate a false le variabili legate all'asta
             cominciaAsta = false;
+            giocatoriMinimi = false;
+            numerocalciatori = 0;
         }
         private static void acquisizioneFileOggetti()//funzione che gestisce l'eventuale creazione e caricamento di dati presenti su file nel programma
         {
