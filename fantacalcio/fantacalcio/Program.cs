@@ -507,6 +507,7 @@ namespace fantacalcio
                 while (success==false)//viene richiesto e controllato il punteggio inserito da tastiera
                 {
                     Console.WriteLine("inserisci il punetggio di {0}", calciatore[i].nome);
+                    punteggiDaConvertire = Console.ReadLine();
                     punteggio = 0;
                     success = double.TryParse(punteggiDaConvertire, out punteggio);
                 }
@@ -542,17 +543,23 @@ namespace fantacalcio
         }
         static public void reset()
         {
-            for (int i = 0; i < player.Length; i++)//vengono ripuliti gli array contenenti i puntatori agli oggetti calciatori di tutti i player
+            if (astaEseguita==true)
             {
-                Array.Clear(player[i].arrayRosaCalciatori, 0, 11);
-                player[i].resetCrediti();
+                for (int i = 0; i < player.Length; i++)//vengono ripuliti gli array contenenti i puntatori agli oggetti calciatori di tutti i player
+                {
+                    if (player[i].arrayRosaCalciatori.Length > 0)
+                    {
+                        Array.Clear(player[i].arrayRosaCalciatori, 0, player[i].arrayRosaCalciatori.Length - 1);
+                        player[i].resetCrediti();
+                    }
+                }
+                Array.Clear(calciatore, 0, numerocalciatori - 1);//vengono eliminati i calciatori
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", string.Empty);//viene svuotato il file contenente i calciatori
+                astaEseguita = false;//vengono impostate a false le variabili legate all'asta
+                cominciaAsta = false;
+                giocatoriMinimi = false;
+                numerocalciatori = 0;
             }
-            Array.Clear(calciatore, 0, numerocalciatori - 1);//vengono eliminati i calciatori
-            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", fileCalciatori);//viene svuotato il file contenente i calciatori
-            astaEseguita = false;//vengono impostate a false le variabili legate all'asta
-            cominciaAsta = false;
-            giocatoriMinimi = false;
-            numerocalciatori = 0;
         }
         private static void acquisizioneFileOggetti()//funzione che gestisce l'eventuale creazione e caricamento di dati presenti su file nel programma
         {
