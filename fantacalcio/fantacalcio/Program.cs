@@ -164,41 +164,9 @@ namespace fantacalcio
                     player[numeroPlayer - 1].getNome();
                     player[numeroPlayer - 1].getPassword();
                     righeFile++;//aumenta di 1 il numero delle righe del file
-                    string[,] arrayDiSalvataggio = new string[righeFile, 4];//array utilizzato per il salvataggio su File
-                    for (int i = 0; i < righeFile; i++)//ciclo che inserisce i valori nell'array di salvataggio
-                    {
-                        if (i == righeFile - 1)//se si tratta dell'ultimo player da inserire non viene inserito il  carattere divisore alla fine
-                        {
-                            arrayDiSalvataggio[i, 0] = player[i].nome + carattereDivisore;//le varie colonne dell'array vengono impostate con le caratteristiche del nuovo utente
-                            arrayDiSalvataggio[i, 1] = player[i].password + carattereDivisore;
-                            arrayDiSalvataggio[i, 2] = Convert.ToString(player[i].crediti) + carattereDivisore;
-                            arrayDiSalvataggio[i, 3] = Convert.ToString(player[i].punteggioTotale);
-                        }
-                        else
-                        {
-                            arrayDiSalvataggio[i, 0] = player[i].nome + carattereDivisore;//le varie colonne dell'array vengono impostate con le caratteristiche del nuovo utente
-                            arrayDiSalvataggio[i, 1] = player[i].password + carattereDivisore;
-                            arrayDiSalvataggio[i, 2] = Convert.ToString(player[i].crediti) + carattereDivisore;
-                            arrayDiSalvataggio[i, 3] = Convert.ToString(player[i].punteggioTotale) + carattereDivisore;
-                        }
-                    }
-                    string salvataggioID = "";
-                    int variabileDiControllo = 0;
-                    for (int i = 0; i < righeFile; i++)//ciclo che inserisce i valori dell'array di salvataggio nella stringa utilizzata per la scrittura su file
-                    {
-                        if (variabileDiControllo == 0)//inserisce come primo valore il numero di righe del file
-                        {
-                            salvataggioID = Convert.ToString(righeFile) + carattereDivisore;
-                            variabileDiControllo = 1;
-                        }
-                        for (int j = 0; j < 4; j++)//dopodichè inserisce gli ID e punteggi
-                        {
-                            salvataggioID = salvataggioID + arrayDiSalvataggio[i, j];
-                        }
-                    }
+                    salvataggioID();
                     accessoEseguito = true;
-                    numeroOggettoPlayer = righeFile - 1;
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "IDePunteggiFanta", salvataggioID);//esegue la scrittura su file
+                    numeroOggettoPlayer = numeroPlayer - 1;
                     Console.Clear();
                     sceltaUtenteLogIn();
                 }
@@ -222,7 +190,6 @@ namespace fantacalcio
                     Console.Clear();
                     Console.WriteLine("{0}",player[i].nome);
                     sceltaUtenteLogIn();
-
                 }
             }
         }
@@ -232,6 +199,8 @@ namespace fantacalcio
             {
                 Console.WriteLine("{0}-{1}",player[i].nome,player[i].punteggioTotale);
             }
+            Console.ReadLine();
+            Console.Clear();
         }
         static public void logOut()//funzione per il log out
         {
@@ -371,23 +340,23 @@ namespace fantacalcio
                             arraySalvataggioCalciatori[i, 3] = calciatore[i].playerPossessore + carattereDivisore;
                         }
                     }
-                    string salvataggioID = "";
+                    string salvataggio = "";
                     int variabileDiControllo = 0;
                     righeFileCalciatori = numerocalciatori;
                     for (int i = 0; i < righeFileCalciatori; i++)//ciclo che inserisce i valori dell'array di salvataggio nella stringa utilizzata per la scrittura su file
                     {
                         if (variabileDiControllo == 0)//inserisce come primo valore il numero di righe del file
                         {
-                            salvataggioID = Convert.ToString(righeFileCalciatori) + carattereDivisore;
+                            salvataggio = Convert.ToString(righeFileCalciatori) + carattereDivisore;
                             variabileDiControllo = 1;
                         }
                         for (int j = 0; j < 4; j++)//dopodichè inserisce gli ID e punteggi
                         {
-                            salvataggioID = salvataggioID + arraySalvataggioCalciatori[i, j];
+                            salvataggio = salvataggio + arraySalvataggioCalciatori[i, j];
                         }
                     }
-                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", salvataggioID);//esegue la scrittura su file
-
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", salvataggio);//esegue la scrittura su file
+                    salvataggioID();
                 }
             }
             else
@@ -516,7 +485,7 @@ namespace fantacalcio
                     double punteggio = 0;
                     while (success == false)//viene richiesto e controllato il punteggio inserito da tastiera
                     {
-                        Console.WriteLine("inserisci il punetggio di {0}", calciatore[i].nome);
+                        Console.WriteLine("inserisci il puneteggio di {0}", calciatore[i].nome);
                         punteggiDaConvertire = Console.ReadLine();
                         punteggio = 0;
                         success = double.TryParse(punteggiDaConvertire, out punteggio);
@@ -566,11 +535,49 @@ namespace fantacalcio
                 }
                 Array.Clear(calciatore, 0, numerocalciatori - 1);//vengono eliminati i calciatori
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", fileCalciatori);//viene svuotato il file contenente i calciatori
+                salvataggioID();
                 astaEseguita = false;//vengono impostate a false le variabili legate all'asta
                 cominciaAsta = false;
                 giocatoriMinimi = false;
                 numerocalciatori = 0;
             }
+        }
+        static public void salvataggioID()
+        {
+            string[,] arrayDiSalvataggio = new string[numeroPlayer, 4];//array utilizzato per il salvataggio su File
+            for (int i = 0; i < numeroPlayer; i++)//ciclo che inserisce i valori nell'array di salvataggio
+            {
+                if (i == numeroPlayer - 1)//se si tratta dell'ultimo player da inserire non viene inserito il  carattere divisore alla fine
+                {
+                    arrayDiSalvataggio[i, 0] = player[i].nome + carattereDivisore;//le varie colonne dell'array vengono impostate con le caratteristiche del nuovo utente
+                    arrayDiSalvataggio[i, 1] = player[i].password + carattereDivisore;
+                    arrayDiSalvataggio[i, 2] = Convert.ToString(player[i].crediti) + carattereDivisore;
+                    arrayDiSalvataggio[i, 3] = Convert.ToString(player[i].punteggioTotale);
+                }
+                else
+                {
+                    arrayDiSalvataggio[i, 0] = player[i].nome + carattereDivisore;//le varie colonne dell'array vengono impostate con le caratteristiche del nuovo utente
+                    arrayDiSalvataggio[i, 1] = player[i].password + carattereDivisore;
+                    arrayDiSalvataggio[i, 2] = Convert.ToString(player[i].crediti) + carattereDivisore;
+                    arrayDiSalvataggio[i, 3] = Convert.ToString(player[i].punteggioTotale) + carattereDivisore;
+                }
+            }
+            string salvataggioID = "";
+            int variabileDiControllo = 0;
+            for (int i = 0; i < numeroPlayer; i++)//ciclo che inserisce i valori dell'array di salvataggio nella stringa utilizzata per la scrittura su file
+            {
+                if (variabileDiControllo == 0)//inserisce come primo valore il numero di righe del file
+                {
+                    salvataggioID = Convert.ToString(numeroPlayer) + carattereDivisore;
+                    variabileDiControllo = 1;
+                }
+                for (int j = 0; j < 4; j++)//dopodichè inserisce gli ID e punteggi
+                {
+                    salvataggioID = salvataggioID + arrayDiSalvataggio[i, j];
+                }
+            }
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "IDePunteggiFanta", salvataggioID);//esegue la scrittura su file
+            salvataggioID = "";
         }
         private static void acquisizioneFileOggetti()//funzione che gestisce l'eventuale creazione e caricamento di dati presenti su file nel programma
         {
@@ -645,6 +652,10 @@ namespace fantacalcio
             righeFileCalciatori = Convert.ToInt32(elementiDaOrdinare[0]);//la variabile righefile assume il valore del primo elemento dell'array elementiFileDaOrdinare(infatti questa cella contiene il numero delle righe)
             int n1 = 1; //Si inizializza la variabile necessaria per l'estrazione del contenuto dell'array monodimensionale elementi.
             numerocalciatori = righeFileCalciatori;
+            if (numerocalciatori>0)
+            {
+                astaEseguita = true;
+            }
             Array.Resize(ref calciatore, numerocalciatori);
             nomeCalciatore = "";
             cognomeCalciatore = "";
