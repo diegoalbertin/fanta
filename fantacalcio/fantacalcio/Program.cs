@@ -1,41 +1,40 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 
 
 namespace fantacalcio
 {
-    class Program
+    internal class Program
     {
-        static public bool cominciaAsta = false;
-        static public bool accessoEseguito = false;//variabile per indicare se l'utente 
-        static public bool astaEseguita = false;
-        static public int numeroOggettoPlayer;
-        static public string nomeCalciatore = "";
-        static public string cognomeCalciatore = "";
-        static public string playerPossessoreCalciatore = "";
-        static public string nomePlayer = "";
-        static public string passwordPlayer = "";
-        static public int creditiPlayer = 0;
-        static public int punteggioTotalePlayer = 0;
-        static public int numeroPlayer = 0;
-        static public player[] player = new player[numeroPlayer];
-        static public int numerocalciatori = 0;
-        static public calciatore[] calciatore = new calciatore[numerocalciatori];
-        static public string file = "0::";
-        static public string fileCalciatori = "0::";
-        static public char carattereDivisore=':';
-        static public int righeFile=0;
-        static public int righeFileCalciatori = 0;
-        static public int[,] arrayOrdinamento;
-        static public bool giocatoriMinimi = false;
-        static void Main(string[] args)
+        public static bool cominciaAsta = false;//variabili globali per l'inserimento di dati
+        public static bool accessoEseguito = false;
+        public static bool astaEseguita = false;
+        public static int numeroOggettoPlayer;
+        public static string nomeCalciatore = "";
+        public static string cognomeCalciatore = "";
+        public static string playerPossessoreCalciatore = "";
+        public static string nomePlayer = "";
+        public static string passwordPlayer = "";
+        public static int creditiPlayer = 0;
+        public static int punteggioTotalePlayer = 0;
+        public static int numeroPlayer = 0;
+        public static player[] player = new player[numeroPlayer];
+        public static int numerocalciatori = 0;
+        public static calciatore[] calciatore = new calciatore[numerocalciatori];
+        public static string file = "0::";
+        public static string fileCalciatori = "0::";
+        public static char carattereDivisore = ':';
+        public static int righeFile = 0;
+        public static int righeFileCalciatori = 0;
+        public static int[,] arrayOrdinamento;
+        public static bool giocatoriMinimi = false;
+
+        private static void Main(string[] args)
         {
             int cicloInfinito = 0;
             acquisizioneFileOggetti();
             acquisizioneFileCalciatori();
-            while (cicloInfinito==0)//ciclo while che gestisce le scelte dell'utente e il funzionamento di base del programma
+            while (cicloInfinito == 0)//ciclo while che gestisce le scelte dell'utente e il funzionamento di base del programma
             {
                 Console.WriteLine("BENVENUTO NEL GIOCO FANTACALCIO");
                 if (accessoEseguito == false)
@@ -46,12 +45,12 @@ namespace fantacalcio
                 {
                     sceltaUtenteLogIn();//set di opzioni per l'utente loggato
                 }
-                Console.ReadKey();               
+                Console.ReadKey();
             }
         }
-        static public void sceltaUtenteNoLogIn()//funzione che permette all'utente di eseguire una tra le azioni base 
+        public static void sceltaUtenteNoLogIn()//funzione che permette all'utente di eseguire una tra le azioni base 
         {
-            Console.WriteLine("cosa vorresti fare?inserisci il numero corrispondente alla tua scelta"+"\n"+"1-creazione ID, 2-log in, 3-visualizza classifica, 4-chiudi programma");
+            Console.WriteLine("cosa vorresti fare?inserisci il numero corrispondente alla tua scelta" + "\n" + "1-creazione ID, 2-log in, 3-visualizza classifica, 4-chiudi programma");
             string inserimentoSceltaUtente = Console.ReadLine();
             int nScelta = 0;
             bool success = int.TryParse(inserimentoSceltaUtente, out nScelta);//viene effettuato un controllo sull'inserimento della scelta
@@ -60,22 +59,22 @@ namespace fantacalcio
                 Console.WriteLine("non hai inserito un numero");
                 sceltaUtenteNoLogIn();
             }
-            else if (nScelta!=1&&nScelta!=2&&nScelta!=3&&nScelta!=4)//in caso non sia stato inserito un numero compreso tra 1-3
+            else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4)//in caso non sia stato inserito un numero compreso tra 1-3
             {
                 Console.WriteLine("non hai inserito un numero tra quelli elencati");
                 sceltaUtenteNoLogIn();
             }
-            else if (nScelta==1)//scelta n°1
+            else if (nScelta == 1)//scelta n°1
             {
                 Console.Clear();
                 creazioneID();
             }
-            else if (nScelta==2)//scelta n°2
+            else if (nScelta == 2)//scelta n°2
             {
                 Console.Clear();
                 logIn();
             }
-            else if (nScelta==3)//scelta n°3
+            else if (nScelta == 3)//scelta n°3
             {
                 Console.Clear();
                 visualizzaClassifica();
@@ -86,7 +85,7 @@ namespace fantacalcio
                 Environment.Exit(0);
             }
         }
-        static public void sceltaUtenteLogIn()
+        public static void sceltaUtenteLogIn()
         {
             Console.WriteLine("cosa vorresti fare?inserisci il numero corrispondente alla tua scelta" + "\n" + "1-inizia asta, 2-log out, 3-visualizza classifica, 4-resetta gioco eliminando i giocatori, 5-inserisci i punteggi dei giocatori per la giornata, 6-chiudi programma");
             string inserimentoSceltaUtente = Console.ReadLine();
@@ -97,10 +96,10 @@ namespace fantacalcio
                 Console.WriteLine("non hai inserito un numero");
                 sceltaUtenteLogIn();
             }
-            else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4 && nScelta != 5 && nScelta!=6)//in caso non sia stato inserito un numero compreso tra 1-3
+            else if (nScelta != 1 && nScelta != 2 && nScelta != 3 && nScelta != 4 && nScelta != 5 && nScelta != 6)//in caso non sia stato inserito un numero compreso tra 1-3
             {
                 Console.WriteLine("non hai inserito un numero tra quelli elencati");
-                 sceltaUtenteLogIn();
+                sceltaUtenteLogIn();
             }
             else if (nScelta == 1)//scelta n°1
             {
@@ -117,7 +116,7 @@ namespace fantacalcio
                 Console.Clear();
                 visualizzaClassifica();
             }
-            else if (nScelta==4)//scelta n°4
+            else if (nScelta == 4)//scelta n°4
             {
                 Console.Clear();
                 reset();
@@ -127,16 +126,16 @@ namespace fantacalcio
                 Console.Clear();
                 inserimentoPunteggiCalciatori();
             }
-            else if(nScelta == 6)//scelta n°6
+            else if (nScelta == 6)//scelta n°6
             {
                 Console.Clear();
                 Console.WriteLine("chiusura programma");
                 chiusuraProgramma();
             }
         }
-        static public void creazioneID()//funzione che crea l'ID
+        public static void creazioneID()//funzione che crea l'ID
         {
-            if (astaEseguita==false)
+            if (astaEseguita == false)
             {
                 string variabileSceltaUtente = "";//variabile utilizzata per la scelta dell'azione dell'utente
                 Console.WriteLine("CREAZIONE ID");
@@ -176,42 +175,46 @@ namespace fantacalcio
                     Console.Clear();
                 }
             }
+            else
+            {
+                Console.WriteLine("non è possibile creare un utente in questo momneto visto che l'asta è già stata eseguita");
+            }
         }
-        static public void logIn()//funzione per il log in
+        public static void logIn()//funzione per il log in
         {
             nome_Password();//viene richiamata la funzione per l'inserimento di nome e passord da parte dell'utente
             for (int i = 0; i < numeroPlayer; i++)//ciclo for per "puntare" al singolo oggetto della classe player
             {
-                if (player[i].nome == nomePlayer&& player[i].password == passwordPlayer)//ciclo if che effetua il controllo tra i nomi e le password
+                if (player[i].nome == nomePlayer && player[i].password == passwordPlayer)//ciclo if che effetua il controllo tra i nomi e le password
                 {           //se viene trovata una corrispondenza 
                     Console.WriteLine("login effettuato");
                     accessoEseguito = true;//variabile che indica se il log in è stato eseguito impostata a true
                     numeroOggettoPlayer = i;//viene salvato il numero relativo all'oggetto player
                     Console.Clear();
-                    Console.WriteLine("{0}",player[i].nome);
+                    Console.WriteLine("{0}", player[i].nome);
                     sceltaUtenteLogIn();
                 }
             }
         }
-        static public void visualizzaClassifica()
+        public static void visualizzaClassifica()
         {
             for (int i = 0; i < numeroPlayer; i++)// stampa a schermo il nome del player e il relativo punteggio
             {
-                Console.WriteLine("{0}-{1}",player[i].nome,player[i].punteggioTotale);
+                Console.WriteLine("{0}-{1}", player[i].nome, player[i].punteggioTotale);
             }
             Console.ReadLine();
             Console.Clear();
         }
-        static public void logOut()//funzione per il log out
+        public static void logOut()//funzione per il log out
         {
             accessoEseguito = false;//variabile che indica se il log in è stato eseguito impostata a false
             numeroOggettoPlayer = numeroPlayer;//il numero relativo all'oggetto player viene impostato su un valore impossibile
             Console.Clear();
-            sceltaUtenteNoLogIn();     
+            sceltaUtenteNoLogIn();
         }
-        static public void iniziaAsta()//funzione asta
+        public static void iniziaAsta()//funzione asta
         {
-            if (astaEseguita==false)//viene controllato se l'asta è già stata eseguita
+            if (astaEseguita == false)//viene controllato se l'asta è già stata eseguita
             {
                 if (player.Length < 2)//i player devono essere almeno 2
                 {
@@ -221,13 +224,13 @@ namespace fantacalcio
                 }
                 else
                 {
-                    if (cominciaAsta==false)
+                    if (cominciaAsta == false)
                     {
                         string variabileDiConfrontoPassword = "";
                         string annullaLogIn = "";
                         //la funzione asta funziona solo se tutti i giocatori sono presenti allo stesso tempo, quindi richiederà il log-in di tutti
                         for (int i = 0; i < numeroPlayer; i++)
-                        {                          
+                        {
                             if (i == numeroOggettoPlayer)//in caso i sia pari al numero dell'oggetto player dell'utente già loggato in precedenza
                             {
                                 //break;//il programma non esegue nulla
@@ -236,7 +239,7 @@ namespace fantacalcio
                             {
                                 while (player[i].password != variabileDiConfrontoPassword && annullaLogIn != "SI")
                                 {
-                                    
+
                                     Console.WriteLine("{0} inserisci la tua password", player[i].nome);
                                     variabileDiConfrontoPassword = Console.ReadLine();
                                     if (variabileDiConfrontoPassword != player[i].password)
@@ -254,7 +257,7 @@ namespace fantacalcio
                         cominciaAsta = true;
                         Console.Clear();
                     }
-                    if (cominciaAsta==true)
+                    if (cominciaAsta == true)
                     {
                         arrayOrdinamento = new int[numeroPlayer, 2];
                         //variabile utilizzata per porre fine all'asta
@@ -317,8 +320,8 @@ namespace fantacalcio
                                 cognomeCalciatore = "";
                                 Console.ReadLine();
                                 Console.Clear();
-                            }                            
-                        }                       
+                            }
+                        }
                         astaEseguita = true;//viene segnalato che l'asta è stata eseguita
                     }
                     //viene eseguito il salvataggio su file dei calciatori
@@ -365,9 +368,9 @@ namespace fantacalcio
                 Console.ReadKey();
                 Console.Clear();
                 sceltaUtenteLogIn();
-            }              
+            }
         }
-        static private void sort()
+        private static void sort()
         {
             int primoElementoComparazione;
             int secondoElementoComparazione;
@@ -391,7 +394,7 @@ namespace fantacalcio
                 swap(indice_min, i);
             }
         }
-        static private void swap( int a, int b)
+        private static void swap(int a, int b)
         {
             int temp1 = arrayOrdinamento[a, 1];
             arrayOrdinamento[a, 1] = arrayOrdinamento[b, 1];
@@ -410,7 +413,7 @@ namespace fantacalcio
                     nomeCalciatore = "bot";
                     cognomeCalciatore = "bot";
                     int lenght = player[i].arrayRosaCalciatori.Length;
-                    for (int j = 0; j < (11-lenght); j++)
+                    for (int j = 0; j < (11 - lenght); j++)
                     {
                         Array.Resize(ref calciatore, calciatore.Length + 1);
                         calciatore[numerocalciatori] = new calciatore();
@@ -426,7 +429,7 @@ namespace fantacalcio
             nomeCalciatore = "";
             cognomeCalciatore = "";
         }
-        static public string inserimentoNomeCalciatore()
+        public static string inserimentoNomeCalciatore()
         {
             while (nomeCalciatore == "")
             {
@@ -435,7 +438,7 @@ namespace fantacalcio
             }
             return nomeCalciatore;
         }
-        static public string inserimentoCognomeCalciatore()
+        public static string inserimentoCognomeCalciatore()
         {
             while (cognomeCalciatore == "")
             {
@@ -444,25 +447,25 @@ namespace fantacalcio
             }
             return cognomeCalciatore;
         }
-        static public bool controlloNumeroGiocatori()//funzione per determinare se il numero di giocatori per player è completo(pari a 11)
+        public static bool controlloNumeroGiocatori()//funzione per determinare se il numero di giocatori per player è completo(pari a 11)
         {
             astaEseguita = true;
             giocatoriMinimi = true;
             for (int i = 0; i < numeroPlayer; i++)
             {
-                if (player[i].arrayRosaCalciatori.Length<11)
+                if (player[i].arrayRosaCalciatori.Length < 11)
                 {
                     giocatoriMinimi = false;
                     astaEseguita = false;
                 }
             }
 
-            return giocatoriMinimi;           
+            return giocatoriMinimi;
         }
-        static public void nome_Password()//funzione per l'inserimento di nome e password del player
+        public static void nome_Password()//funzione per l'inserimento di nome e password del player
         {
             string scelta = "NO";//la stringa viene impostata a NO per poter far partire il ciclo successivo
-            while(scelta != "SI")//se la scelta dell'utente non è SI esegue il ciclo
+            while (scelta != "SI")//se la scelta dell'utente non è SI esegue il ciclo
             {
                 Console.WriteLine("qual'e' il tuo username?");
                 nomePlayer = Console.ReadLine();//inserimento del nome
@@ -472,14 +475,14 @@ namespace fantacalcio
                 scelta = Convert.ToString(Console.ReadLine()).ToUpper();//variabile per l'eventuale reinserimento di nome e cognome                                          
             }
         }
-        static public void inserimentoPunteggiCalciatori()//funzione per l'inserimento dei punteggi per la giornata dei singoli giocatori
+        public static void inserimentoPunteggiCalciatori()//funzione per l'inserimento dei punteggi per la giornata dei singoli giocatori
         {
-            int[] playerVincitore = new int[1] ;
+            int[] playerVincitore = new int[1];
             double max = 0;
-            string punteggiDaConvertire="";
+            string punteggiDaConvertire = "";
             for (int i = 0; i < calciatore.Length; i++)//ciclo for per scorrere tra i calciatori
             {
-                if (calciatore[i].nome!="bot")
+                if (calciatore[i].nome != "bot")
                 {
                     bool success = false;
                     double punteggio = 0;
@@ -512,18 +515,20 @@ namespace fantacalcio
                 }
                 else if (punteggioGiornata == max)
                 {
-                    Array.Resize(ref playerVincitore, playerVincitore.Length+1);
-                    playerVincitore[playerVincitore.Length-1] = i;//in caso di parità viene ridimensionato l'array e vengono salvati i vari numeri degli oggetti player con il risultato maggiore
+                    Array.Resize(ref playerVincitore, playerVincitore.Length + 1);
+                    playerVincitore[playerVincitore.Length - 1] = i;//in caso di parità viene ridimensionato l'array e vengono salvati i vari numeri degli oggetti player con il risultato maggiore
                 }
             }
             for (int i = 0; i < playerVincitore.Length; i++)
             {
-                player[playerVincitore[i]].getPunteggioTotale();//vengono assegnati 3 punti ai player presenti nell'array
+                player[playerVincitore[i]].getPunteggioTotale(3);//vengono assegnati 3 punti ai player presenti nell'array
             }
+            Console.Clear();
+            salvataggioID();
         }
-        static public void reset()
+        public static void reset()
         {
-            if (astaEseguita==true)
+            if (astaEseguita == true)
             {
                 for (int i = 0; i < player.Length; i++)//vengono ripuliti gli array contenenti i puntatori agli oggetti calciatori di tutti i player
                 {
@@ -534,7 +539,7 @@ namespace fantacalcio
                     }
                 }
                 Array.Clear(calciatore, 0, numerocalciatori - 1);//vengono eliminati i calciatori
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", fileCalciatori);//viene svuotato il file contenente i calciatori
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "calciatori", "0::");//viene svuotato il file contenente i calciatori
                 salvataggioID();
                 astaEseguita = false;//vengono impostate a false le variabili legate all'asta
                 cominciaAsta = false;
@@ -542,7 +547,7 @@ namespace fantacalcio
                 numerocalciatori = 0;
             }
         }
-        static public void salvataggioID()
+        public static void salvataggioID()
         {
             string[,] arrayDiSalvataggio = new string[numeroPlayer, 4];//array utilizzato per il salvataggio su File
             for (int i = 0; i < numeroPlayer; i++)//ciclo che inserisce i valori nell'array di salvataggio
@@ -583,7 +588,7 @@ namespace fantacalcio
         {
             try
             {
-                file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory+ "IDePunteggiFanta");//il programma prova a leggere il file
+                file = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "IDePunteggiFanta");//il programma prova a leggere il file
             }
             catch (FileNotFoundException)//in caso si verifichi l'eccezione in cui non viene trovato il file il programma ne creerà uno 
             {
@@ -600,7 +605,7 @@ namespace fantacalcio
             righeFile = Convert.ToInt32(elementiFileDaOrdinare[0]);//la variabile righefile assume il valore del primo elemento dell'array elementiFileDaOrdinare(infatti questa cella contiene il numero delle righe)
             int n1 = 1; //Si inizializza la variabile necessaria per l'estrazione del contenuto dell'array monodimensionale elementi.
             numeroPlayer = righeFile;
-            Array.Resize(ref player,righeFile);
+            Array.Resize(ref player, righeFile);
             for (int i = 0; i < righeFile; i++) //crea e Inserisce negli oggetti player il contenuto dell'array monodimensionale elementiFileDaOrdinare, 
             {
                 player[i] = new player();//a ogni ciclo viene istanziato un nuovo oggetto della classe player
@@ -619,14 +624,14 @@ namespace fantacalcio
                     }
                     else if (j == 2)//j=2 se si tratta del terzo elemento della riga dell'array ossia i crediti del player
                     {
-                        creditiPlayer = 1000-Convert.ToInt32(elementiFileDaOrdinare[n1]);//viene asseganto all'intero creditiPlayer il valore della cella dell'array
+                        creditiPlayer = 1000 - Convert.ToInt32(elementiFileDaOrdinare[n1]);//viene asseganto all'intero creditiPlayer il valore della cella dell'array
                         player[i].getCrediti(creditiPlayer);//viene richiamato il metodo per l'inserimento dei crediti dell'oggetto
                     }
                     else if (j == 3)//j=3 se si tratta del quarto elemento della riga dell'array ossia il punteggioTotale del player
                     {
                         punteggioTotalePlayer = Convert.ToInt32(elementiFileDaOrdinare[n1]);//viene asseganto all'intero punteggioTotalePlayer il valore della cella dell'array
-                        player[i].getPunteggioTotale();//viene richiamato il metodo per l'inserimento del punteggioTotale dell'oggetto
-                    }                    
+                        player[i].getPunteggioTotale(punteggioTotalePlayer);//viene richiamato il metodo per l'inserimento del punteggioTotale dell'oggetto
+                    }
                     n1++;//viene aumentato il puntatore alla cella dell'array
                 }
             }
@@ -652,7 +657,7 @@ namespace fantacalcio
             righeFileCalciatori = Convert.ToInt32(elementiDaOrdinare[0]);//la variabile righefile assume il valore del primo elemento dell'array elementiFileDaOrdinare(infatti questa cella contiene il numero delle righe)
             int n1 = 1; //Si inizializza la variabile necessaria per l'estrazione del contenuto dell'array monodimensionale elementi.
             numerocalciatori = righeFileCalciatori;
-            if (numerocalciatori>0)
+            if (numerocalciatori > 0)
             {
                 astaEseguita = true;
             }
@@ -688,7 +693,7 @@ namespace fantacalcio
                         calciatore[i].getPlayerPossessore(playerPossessoreCalciatore);//viene richiamato il metodo per l'inserimento del punteggioTotale dell'oggetto
                         for (int k = 0; k < player.Length; k++)
                         {
-                            if (playerPossessoreCalciatore==player[k].nome)
+                            if (playerPossessoreCalciatore == player[k].nome)
                             {
                                 player[k].getRosa(i);
                                 player[k].getCrediti(prezzoCalciatore);
@@ -700,18 +705,19 @@ namespace fantacalcio
             }
             controlloNumeroGiocatori();
         }
-        static public void chiusuraProgramma()//funzione che effettua la chiusura del programma 
+        public static void chiusuraProgramma()//funzione che effettua la chiusura del programma 
         {
             Environment.Exit(0);
         }
     }
-    class calciatore
+
+    internal class calciatore
     {
         public string nome;
         public string cognome;
         public int prezzo;
         public string playerPossessore;
-        public double punteggioPartita; 
+        public double punteggioPartita;
         public calciatore()
         {
             nome = "";
@@ -720,13 +726,13 @@ namespace fantacalcio
             playerPossessore = "";
             punteggioPartita = 0;
         }
-        public void getNome( )
+        public void getNome()
         {
             nome = Program.nomeCalciatore;
         }
-        public void getCognome( )
+        public void getCognome()
         {
-            cognome = Program.cognomeCalciatore;          
+            cognome = Program.cognomeCalciatore;
         }
         public void getPrezzo(int offerta)
         {
@@ -748,7 +754,8 @@ namespace fantacalcio
             }
         }
     }
-    class player
+
+    internal class player
     {
         public string nome = "";
         public string password = "";
@@ -761,7 +768,7 @@ namespace fantacalcio
         {
             nome = "";
             password = "";
-            crediti=1000;
+            crediti = 1000;
             punteggioTotale = 0;
             punteggioGiornata = 0;
             offerta = 0;
@@ -795,9 +802,9 @@ namespace fantacalcio
         {
             punteggioGiornata = punteggio;
         }
-        public void getPunteggioTotale()
+        public void getPunteggioTotale(int punti)
         {
-            punteggioTotale += 3;
+            punteggioTotale += punti;
         }
     }
 }
